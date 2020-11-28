@@ -1,6 +1,9 @@
 import java.util.ArrayList;
 import java.util.List;
 
+import AVLTree.AVLNode;
+import AVLTree.IAVLNode;
+
 /**
  *
  * AVLTree
@@ -251,50 +254,89 @@ public class AVLTree {
 	 * (It must implement IAVLNode)
 	 */
 	public class AVLNode implements IAVLNode {
-		public int getKey() {
-			return 42; // to be replaced by student code
-		}
-
-		public String getValue() {
-			return null; // to be replaced by student code
-		}
-
-		public void setLeft(IAVLNode node) {
-			return; // to be replaced by student code
-		}
-
-		public IAVLNode getLeft() {
-			return null; // to be replaced by student code
-		}
-
-		public void setRight(IAVLNode node) {
-			return; // to be replaced by student code
-		}
-
-		public IAVLNode getRight() {
-			return null; // to be replaced by student code
-		}
-
-		public void setParent(IAVLNode node) {
-			return; // to be replaced by student code
-		}
-
-		public IAVLNode getParent() {
-			return null; // to be replaced by student code
-		}
-
-		// Returns True if this is a non-virtual AVL node
-		public boolean isRealNode() {
-			return true; // to be replaced by student code
-		}
-
-		public void setHeight(int height) {
-			return; // to be replaced by student code
-		}
-
-		public int getHeight() {
-			return 42; // to be replaced by student code
-		}
-	}
+		  private int key; 
+		  private String value;
+		  private AVLNode right;
+		  private AVLNode left;
+		  private AVLNode parent;
+		  private AVLNode empty_node = new AVLNode();  //empty node in the end of the tree
+		  private int height;
+		  private int rank;
+		  private int size;
+		  
+		  public AVLNode(int key, String value) {  //constructor for node
+			  this.key = key;
+			  this.value = value;
+			  this.right = empty_node;
+			  this.left = empty_node;
+		  }
+		  public AVLNode() { //constructor for virtual node
+			  this.key = -1;
+			  this.value = null;
+			  this.rank = -1;
+		  }
+			public int getKey()
+			{
+				return this.key; 
+			}
+			public String getValue()
+			{
+				return this.value; 
+			}
+			public void setLeft(IAVLNode node)
+			{
+				this.left=(AVLNode)node; 
+			}
+			public IAVLNode getLeft()
+			{
+				return this.left; 
+			}
+			public void setRight(IAVLNode node)
+			{
+				this.right=(AVLNode)node; 
+			}
+			public IAVLNode getRight()
+			{
+				return this.right; 
+			}
+			public void setParent(IAVLNode node)
+			{
+				this.parent=(AVLNode)node; 
+			}
+			public IAVLNode getParent()
+			{
+				return this.parent; 
+			}
+			// Returns True if this is a non-virtual AVL node
+			public boolean isRealNode()
+			{
+				if (this.key != -1) return true;
+				return false;
+			}
+	    public void setHeight(int height)
+	    {
+	      this.height = height;
+	    }
+	    public int getHeight()
+	    {
+	      return this.height; 
+	    }
+	    public void setRank(int rank)
+	    {
+	      this.rank = rank;
+	    }
+	    public int getRank()
+	    {
+	      return this.rank; 
+	    }
+	    public void setSize(int size)
+	    {
+	      this.size = size;
+	    }
+	    public int getSize()
+	    {
+	      return this.size; 
+	    }
+	  }
 
 }
