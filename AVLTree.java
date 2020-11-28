@@ -13,6 +13,47 @@ import AVLTree.IAVLNode;
  */
 
 public class AVLTree {
+	private AVLNode root;
+	
+	public AVLTree() {
+		this(null);
+	}
+	public AVLTree(AVLNode root) {
+		this.root = root;
+	}
+	
+	public AVLNode getPredecessor(AVLNode node) {
+		if (node.getLeft().getKey() != -1) {
+			node=(AVLNode) node.getLeft();
+			while (node.getRight().getKey() != -1) node=(AVLNode) node.getRight();
+			return node;
+		}
+		else {
+			while(node.getParent() != null) {
+				AVLNode parent= (AVLNode) node.getParent();
+				if (parent.getRight().getKey() == node.getKey()) return parent;
+				node=parent;
+			}
+		}
+		return null;
+	}
+	
+	public AVLNode getSuccessor(AVLNode node) {
+		if (node.getRight().getKey() != -1) {
+			node=(AVLNode) node.getRight();
+			while (node.getLeft().getKey() != -1) node=(AVLNode) node.getLeft();
+			return node;
+		}
+		else {
+			while(node.getParent() != null) {
+				AVLNode parent= (AVLNode) node.getParent();
+				if (parent.getLeft().getKey() == node.getKey()) return parent;
+				node=parent;
+			}
+		}
+		return null;
+		
+	}
 
 	/**
 	 * public boolean empty()
