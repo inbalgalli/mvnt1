@@ -114,6 +114,7 @@ public class AVLTree {
 	 * -1 if an item with key k was not found in the tree.
 	 */
 	public int delete(int k) {
+		int i=0;
 		return 42; // to be replaced by student code
 	}
 
