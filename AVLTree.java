@@ -222,7 +222,11 @@ public class AVLTree {
 	 * precondition: none postcondition: none
 	 */
 	public int size() {
-		return 42; // to be replaced by student code
+		AVLNode node = (AVLNode) this.getRoot();
+		if (node == null) {
+			return 0;
+		}
+		return node.size; // to be replaced by student code
 	}
 
 	/**
@@ -233,7 +237,7 @@ public class AVLTree {
 	 * precondition: none postcondition: none
 	 */
 	public IAVLNode getRoot() {
-		return null;
+		return this.root;
 	}
 
 	/**
