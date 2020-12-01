@@ -114,8 +114,178 @@ public class AVLTree {
 	 * -1 if an item with key k was not found in the tree.
 	 */
 	public int delete(int k) {
-		int i=0;
-		return 42; // to be replaced by student code
+		AVLNode node = root;
+		while (node.getKey() != -1) {
+			if (node.getKey() == k) break;
+			if (node.getKey() > k) node=(AVLNode) node.getLeft();
+			else node=(AVLNode) node.getRight();  
+		}
+		if (node.getKey() == -1) return 0; //there isn't any node with key k in the tree
+		AVLNode parent = (AVLNode) node.getParent();
+		help_delete(node,parent, k);
+		int height_parent = parent.getHeight();
+		int height_rightSon = parent.getRight().getHeight();
+		int height_leftSon = parent.getLeft().getHeight();
+		int num_rotates =0;
+		while (height_parent != Math.max(height_rightSon, height_leftSon) +1 ||
+				Math.abs(height_rightSon - height_leftSon) > 1) { // we balanced the tree 
+			if (height_leftSon == height_rightSon) {
+				parent.setHeight(height_parent-1);
+				parent=(AVLNode)parent.getParent();
+				
+			}
+			else {
+				AVLNode minSon;
+				if (height_rightSon > height_leftSon) minSon = (AVLNode) parent.getLeft();
+				else minSon = (AVLNode) parent.getRight();
+				int min_rightGrandson_height = minSon.getRight().getHeight();
+				int min_leftGrandson_height = minSon.getLeft().getHeight();
+				if (min_rightGrandson_height == min_leftGrandson_height ) {
+					parent = singleRotation(parent);
+					num_rotates +=1;
+					return num_rotates;
+				}
+				if ((minSon == (AVLNode) parent.getLeft() &&  min_rightGrandson_height > min_leftGrandson_height) ||
+					(minSon == (AVLNode) parent.getRight() && min_rightGrandson_height < min_leftGrandson_height )) {
+					parent = singleRotation(parent);
+					num_rotates +=1;
+				}
+				else {
+					parent = doubleRotation(parent);
+					num_rotates +=2;
+				}
+				
+			}
+			height_parent = parent.getHeight();
+			height_rightSon = parent.getRight().getHeight();
+			height_leftSon = parent.getLeft().getHeight();
+		}	   
+			   return num_rotates;	// to be replaced by student code
+		  
+	}
+	
+	private void help_delete(AVLNode node,AVLNode parent, int k) {
+		if (parent != null) {
+			if (node.getRight().getKey() == -1 && node.getLeft().getKey()==-1) { // node is a leaf
+				AVLNode empty= new AVLNode();
+				help_delete_2(parent, empty, k);
+			}
+			else {
+				if (node.getRight().getKey() == -1) { // node has only left son
+					AVLNode left = (AVLNode) node.getLeft();
+					help_delete_2(parent, left, k);
+				}
+				if (node.getLeft().getKey() == -1) { // node has only right son
+					AVLNode right = (AVLNode) node.getRight();
+					help_delete_2(parent, right, k);
+				}
+				if (node.getRight().getKey() != -1 && node.getLeft().getKey()!=-1 ) { //node has 2 sons
+				   AVLNode successor=getSuccessor(node);
+				   delete(successor.getKey()); //worst case will stop at the fourth if 
+				   help_delete_2(parent, successor, k);
+				}
+			}
+		}
+		else { //change the root
+			AVLNode successor=getSuccessor(node);
+			help_delete(successor,(AVLNode) successor.getParent(), successor.getKey()); //worst case will stop at the fourth if 
+			successor.setRight(node.getRight());
+			successor.setLeft(node.getLeft());
+			node.getRight().setParent(successor);
+			node.getLeft().setParent(successor);
+			this.root=successor;
+		}
+	}
+		
+	private void help_delete_2 (AVLNode parent, AVLNode son, int k) {
+		if (parent.getRight().getKey() == k) {
+			parent.setRight(son);
+		    son.setParent(parent);
+		}
+		else {
+			parent.setLeft(son);
+		    son.setParent(parent);
+		}
+	}
+	
+	private AVLNode singleRotation(AVLNode z) {
+		AVLNode parent = (AVLNode)z.getParent();
+		AVLNode y;
+		AVLNode a;
+		AVLNode b;
+		if (z.getLeft().getHeight() > z.getRight().getHeight()) {
+			 y =(AVLNode) z.getRight();
+			 a =(AVLNode) y.getLeft();
+			 b =(AVLNode) y.getRight();
+			 y.setLeft(z);
+			 y.setRight(b);
+			 z.setRight(a);
+		}
+		else {
+			 y =(AVLNode) z.getLeft();
+			 b =(AVLNode) y.getLeft();
+			 a =(AVLNode) y.getRight();
+			 y.setLeft(b);
+			 y.setRight(z);
+			 z.setLeft(a);
+		}
+		z.setParent(y);
+		b.setParent(y);
+		a.setParent(z);
+		y.setParent(parent);
+		if (parent != null) {
+			if (parent.getKey() > y.getKey()) parent.setRight(y);
+			else parent.setLeft(y);
+		}
+		if (a.getHeight()==b.getHeight()) {
+			z.setHeight(z.getHeight() -1);
+			y.setHeight(y.getHeight() +1);
+		}
+		else z.setHeight(z.getHeight() -2);
+		return y;
+	}
+	
+	private AVLNode doubleRotation(AVLNode z) {
+		AVLNode parent = (AVLNode)z.getParent();
+		AVLNode y;
+		AVLNode a;
+		AVLNode c;
+		AVLNode d;
+		if (z.getLeft().getHeight() > z.getRight().getHeight()) {
+			 y =(AVLNode) z.getRight();
+			 a =(AVLNode) y.getLeft();
+			 d =(AVLNode) a.getRight();
+			 c =(AVLNode) a.getLeft();
+			 a.setLeft(z);
+			 a.setRight(y);
+			 z.setRight(c);
+			 y.setLeft(d);
+		}
+		else {
+			 y =(AVLNode) z.getLeft();
+			 a =(AVLNode) y.getRight();
+			 c =(AVLNode) a.getRight();
+			 d =(AVLNode) a.getLeft();
+			 a.setLeft(y);
+			 a.setRight(z);
+			 z.setLeft(a);
+			 z.setLeft(c);
+			 y.setRight(d);
+		}
+		z.setParent(a);
+		y.setParent(a);
+		c.setParent(z);
+		d.setParent(y);
+		y.setParent(parent);
+		if (parent != null) {
+			if (parent.getKey() > a.getKey()) parent.setRight(a);
+			else parent.setLeft(a);
+		}
+		a.setHeight(a.getHeight() +1);
+		z.setHeight(z.getHeight() -2);
+		y.setHeight(y.getHeight() -1);
+		
+		return a;
 	}
 
 	/**
