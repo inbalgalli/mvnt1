@@ -144,7 +144,7 @@ public class AVLTree {
 			x = z;
 			z = z.getParent();
 			
-			while (x.getKey() != this.getRoot().getKey() && x.getHeight() == z.getHeight()) {
+			while (x.getKey() != this.getRoot().getKey() && x.getHeight() == z.getHeight()) { 
 				if (hightDef(z, x) == 1) { // Case 1
 					rebalancing = promote(z, rebalancing);
 					x = z;
@@ -155,7 +155,6 @@ public class AVLTree {
 							rebalancing = singleRotation(z, rebalancing, 'I');
 							break;
 						} else { // case 3
-							System.out.println("IM IN");
 							rebalancing = doubleRotation(z, rebalancing, 'I');
 							break;
 							}
@@ -164,7 +163,6 @@ public class AVLTree {
 								rebalancing = singleRotation(z, rebalancing, 'I');
 								break;
 							} else { // case 3
-								System.out.println("IM IN");
 								rebalancing = doubleRotation(z, rebalancing, 'I');
 								break;
 							}
@@ -180,7 +178,7 @@ public class AVLTree {
 
 	}
 	
-	private int hightDef (IAVLNode parent, IAVLNode son) {
+	private int hightDef (IAVLNode parent, IAVLNode son) { // check the hight difference between parent an OTHER son (not the son that is a param)
 		if (parent.getLeft().getKey() == son.getKey()) {
 			return parent.getHeight() - parent.getRight().getHeight();
  		}else {
@@ -230,9 +228,7 @@ public class AVLTree {
 			z.setHeight(z.getHeight() -2);
 			i = i+2;
 		}else {
-			System.out.println(z.getKey() + " and h - " + z.getHeight());
 			z.setHeight(z.getHeight() -1);
-			System.out.println(z.getKey() + " and h - " + z.getHeight());
 			i++;
 		}
 		
