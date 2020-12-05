@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import AVLTree.AVLNode;
 import AVLTree.IAVLNode;
@@ -101,9 +102,89 @@ public class AVLTree {
 	 * item with key k already exists in the tree.
 	 */
 	public int insert(int k, String i) {
-		return 42; // to be replaced by student code
-	}
+		IAVLNode z = searchPlace(k);
+		if (z.getKey() == k) return -1;
+		IAVLNode x = new AVLNode (k,i);
+		x.setHeight(0);
+		int rebalancing = 0;
+		if (!z.getRight().isRealNode() && !z.getLeft().isRealNode()) { //the parent z is a leaf
+			placeSon (z, x);
+			rebalancing = promote(z, rebalancing);
+			if (z.getHeight() == z.getParent().getHeight()) { //problem going up
+				x = z;
+				z = z.getParent();
+				while (x.getHeight() == z.getHeight()) { 
+					
+					if (hightDef (z, x) == 1) { //Case 1
+						rebalancing = promote(z, rebalancing);
+						x = z;
+						z = z.getParent();
+					}else { //Case 2 or Case 3, height deference = 2 
+						if (hightDef(x, x.getRight()) == 2 && hightDef(x, x.getLeft()) == 1) { //case 2
+							
+						}
+						
+					}
+				}
+			
+			
+			
+			}else{
+				return rebalancing; 
+			}
+				
 
+		}else { //the parent z is not a leaf - tree stays valid
+			placeSon (z, x);
+			return rebalancing;
+		}
+		
+		
+	}
+	
+	private int hightDef (IAVLNode parent, IAVLNode son) {
+		if (parent.getLeft().getKey() == son.getKey()) {
+			return parent.getHeight() - parent.getRight().getHeight();
+ 		}else {
+ 			return parent.getHeight() - parent.getLeft().getHeight();
+ 		}
+	}
+	
+	private int promote (IAVLNode node, int cnt) {
+		int h = node.getHeight();
+		node.setHeight(h+1);
+		return cnt+1;
+	}
+	
+	private int demote (IAVLNode node, int cnt) {
+		int h = node.getHeight();
+		node.setHeight(h+1);
+		return cnt+1;
+	}	
+	
+	private void placeSon (IAVLNode parent, IAVLNode child) {
+		if (child.getKey() > parent.getKey()) { //set as right son
+			parent.setRight(child);
+		}else { //set as left son
+			parent.setLeft(child);
+		}
+	}
+	
+	
+	private IAVLNode searchPlace (int k) {
+		IAVLNode node = this.getRoot();
+		while (node.getKey() != -1) {
+			if (k > node.getKey()) {
+				node = node.getRight();				
+			}
+			else if (k < node.getKey()) {
+				node = node.getLeft();				
+			}
+			else if (k == node.getKey()) {
+				return node;
+			}
+		} return node.getParent();
+	}
 	/**
 	 * public int delete(int k)
 	 *
@@ -208,23 +289,23 @@ public class AVLTree {
 		}
 	}
 	
-	private AVLNode singleRotation(AVLNode z) {
-		AVLNode parent = (AVLNode)z.getParent();
-		AVLNode y;
-		AVLNode a;
-		AVLNode b;
+	private IAVLNode singleRotation(IAVLNode z) {
+		IAVLNode parent = z.getParent();
+		IAVLNode y;
+		IAVLNode a;
+		IAVLNode b;
 		if (z.getLeft().getHeight() > z.getRight().getHeight()) {
-			 y =(AVLNode) z.getRight();
-			 a =(AVLNode) y.getLeft();
-			 b =(AVLNode) y.getRight();
+			 y = z.getRight();
+			 a = y.getLeft();
+			 b = y.getRight();
 			 y.setLeft(z);
 			 y.setRight(b);
 			 z.setRight(a);
 		}
 		else {
-			 y =(AVLNode) z.getLeft();
-			 b =(AVLNode) y.getLeft();
-			 a =(AVLNode) y.getRight();
+			 y = z.getLeft();
+			 b = y.getLeft();
+			 a = y.getRight();
 			 y.setLeft(b);
 			 y.setRight(z);
 			 z.setLeft(a);
@@ -329,43 +410,36 @@ public class AVLTree {
 	 * if the tree is empty.
 	 */
 	public int[] keysToArray() {
-		List<IAVLNode> stack = new ArrayList<IAVLNode>();
+		Stack<IAVLNode> stack = new Stack<IAVLNode>();
 		int i = 0;
-		int stackCNT = 0;
 		int[] arr = new int[this.size()];
 		IAVLNode node = this.getRoot();
-		stack.add(node);
-		while (!stack.isEmpty()) {
+		stack.push(node);
+		while (!stack.empty()) {
 			while (node.getLeft().getKey() != -1) {
 				node = node.getLeft();
-				stack.add(node);
-				stackCNT++;
+				stack.push(node);
 			}
 			arr[i] = node.getKey();
 			i++;
-			node = stack.remove(stackCNT);
-			stackCNT--;
+			node = stack.pop();
 			if (node.getRight().getKey() != -1) {
 				node = node.getRight();
-				stack.add(node);
-				stackCNT++;
+				stack.push(node);
 			}else {
-				node = stack.remove(stackCNT);
-				stackCNT--;
+				node = stack.pop();
 				arr[i] = node.getKey();
 				i++;
 				if (node.getRight().getKey() == -1) {
 					while (node.getRight().getKey() == -1) {
-						node = stack.remove(stackCNT);
-						stackCNT--;
+						node = stack.pop();
 						arr[i] = node.getKey();
 						i++;
 						node = node.getRight();
 					}
 				}else {
 					node = node.getRight();
-					stack.add(node);
-					stackCNT++;
+					stack.push(node);
 				}
 			}
 		}
