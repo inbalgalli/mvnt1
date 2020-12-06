@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
 
@@ -41,12 +42,15 @@ public class AVLTree {
 	}
 
 	private AVLNode root;
+	private int size;
 	
 	public AVLTree() {
 		this(null);
+		this.size = 0;
 	}
 	public AVLTree(AVLNode root) {
 		this.root = root;
+		this.size = 1;
 	}
 	
 	public AVLNode getPredecessor(AVLNode node) {
@@ -128,10 +132,13 @@ public class AVLTree {
 	 * item with key k already exists in the tree.
 	 */
 	public int insert(int k, String i) {
+		int oldS = this.size ;
+		this.size = oldS+1;
 		if (this.empty()) {
 			this.root = new AVLNode (k,i);
 			return 0;
 		}
+		System.out.println("S: "+ this.size);
 		IAVLNode z = searchPlace(k);
 		System.out.println("z is: " +z.getKey());
 		if (z.getKey() == k) return -1;
@@ -486,34 +493,43 @@ public class AVLTree {
 		Stack<IAVLNode> stack = new Stack<IAVLNode>();
 		int i = 0;
 		int[] arr = new int[this.size()];
+		System.out.println("SIZE "+this.size());
 		IAVLNode node = this.getRoot();
 		stack.push(node);
-		while (!stack.empty()) {
-			while (node.getLeft().getKey() != -1) {
-				node = node.getLeft();
+		while (i < this.size()) {
+			while (node.getKey() != -1) {
 				stack.push(node);
+				node = node.getLeft();
 			}
+			node = stack.pop();
 			arr[i] = node.getKey();
 			i++;
-			node = stack.pop();
-			if (node.getRight().getKey() != -1) {
-				node = node.getRight();
-				stack.push(node);
-			}else {
-				node = stack.pop();
-				arr[i] = node.getKey();
-				i++;
-				if (node.getRight().getKey() == -1) {
+			if (i < this.size()) {
+				if (node.getRight().getKey() != -1) {
+					node = node.getRight();
+					//stack.push(node);
+				} else {
+					node = stack.pop();
+					arr[i] = node.getKey();
+					i++;
+					// node = node.getRight();
+					if (node.getRight().getKey() == -1) {
+						node = stack.pop();
+						arr[i] = node.getKey();
+						i++;
+
+					}
 					while (node.getRight().getKey() == -1) {
 						node = stack.pop();
 						arr[i] = node.getKey();
 						i++;
-						node = node.getRight();
 					}
-				}else {
 					node = node.getRight();
-					stack.push(node);
+
 				}
+					//node = node.getRight();
+					//stack.push(node);
+				
 			}
 		}
 		return arr;
@@ -540,11 +556,7 @@ public class AVLTree {
 	 * precondition: none postcondition: none
 	 */
 	public int size() {
-		AVLNode node = (AVLNode) this.getRoot();
-		if (node == null) {
-			return 0;
-		}
-		return node.size; // to be replaced by student code
+		return this.size;
 	}
 
 	/**
