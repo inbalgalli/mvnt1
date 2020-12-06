@@ -138,9 +138,9 @@ public class AVLTree {
 			this.root = new AVLNode (k,i);
 			return 0;
 		}
-		System.out.println("S: "+ this.size);
+		//System.out.println("S: "+ this.size);
 		IAVLNode z = searchPlace(k);
-		System.out.println("z is: " +z.getKey());
+		//System.out.println("z is: " +z.getKey());
 		if (z.getKey() == k) return -1;
 		IAVLNode x = new AVLNode (k,i);
 		x.setHeight(0);
@@ -493,7 +493,7 @@ public class AVLTree {
 		Stack<IAVLNode> stack = new Stack<IAVLNode>();
 		int i = 0;
 		int[] arr = new int[this.size()];
-		System.out.println("SIZE "+this.size());
+		//System.out.println("SIZE "+this.size());
 		IAVLNode node = this.getRoot();
 		stack.push(node);
 		while (i < this.size()) {
@@ -547,7 +547,7 @@ public class AVLTree {
 		Stack<IAVLNode> stack = new Stack<IAVLNode>();
 		int i = 0;
 		String[] arr = new String[this.size()];
-		System.out.println("SIZE "+this.size());
+		//System.out.println("SIZE "+this.size());
 		IAVLNode node = this.getRoot();
 		stack.push(node);
 		while (i < this.size()) {
