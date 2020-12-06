@@ -544,8 +544,50 @@ public class AVLTree {
 	 * respective keys, or an empty array if the tree is empty.
 	 */
 	public String[] infoToArray() {
-		String[] arr = new String[42]; // to be replaced by student code
-		return arr; // to be replaced by student code
+		Stack<IAVLNode> stack = new Stack<IAVLNode>();
+		int i = 0;
+		String[] arr = new String[this.size()];
+		System.out.println("SIZE "+this.size());
+		IAVLNode node = this.getRoot();
+		stack.push(node);
+		while (i < this.size()) {
+			while (node.getKey() != -1) {
+				stack.push(node);
+				node = node.getLeft();
+			}
+			node = stack.pop();
+			arr[i] = node.getValue();
+			i++;
+			if (i < this.size()) {
+				if (node.getRight().getKey() != -1) {
+					node = node.getRight();
+					//stack.push(node);
+				} else {
+					node = stack.pop();
+					arr[i] = node.getValue();
+					i++;
+					// node = node.getRight();
+					if (node.getRight().getKey() == -1) {
+						node = stack.pop();
+						arr[i] = node.getValue();
+						i++;
+
+					}
+					while (node.getRight().getKey() == -1) {
+						node = stack.pop();
+						arr[i] = node.getValue();
+						i++;
+					}
+					node = node.getRight();
+
+				}
+					//node = node.getRight();
+					//stack.push(node);
+				
+			}
+		}
+		return arr;
+
 	}
 
 	/**
