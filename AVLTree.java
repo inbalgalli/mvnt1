@@ -23,7 +23,7 @@ public class AVLTree {
 	public static void print(IAVLNode x) {
 		System.out.println(x.getKey());
 		if (x.getLeft() != null) print(x.getLeft());
-		if (x.getRight()!= null) print (x.getRight);
+		if (x.getRight()!= null) print (x.getRight());
 	}
 	private AVLNode root;
 	
@@ -213,7 +213,7 @@ public class AVLTree {
 			if (node.getKey() > k) node=(AVLNode) node.getLeft();
 			else node=(AVLNode) node.getRight();  
 		}
-		if (node.getKey() == -1) return 0; //there isn't any node with key k in the tree
+		if (node.getKey() == -1) return -1; //there isn't any node with key k in the tree
 		
 		//-----------second part----------- deleting the node
 		AVLNode parent = (AVLNode) node.getParent();
@@ -304,7 +304,7 @@ public class AVLTree {
 		IAVLNode y;
 		IAVLNode a;
 		IAVLNode b;
-		if (z.getLeft().getHeight() > z.getRight().getHeight()) {
+		if (z.getLeft().getHeight() < z.getRight().getHeight()) {
 			 y = z.getRight();
 			 a = y.getLeft();
 			 b = y.getRight();
@@ -342,7 +342,7 @@ public class AVLTree {
 		AVLNode a;
 		AVLNode c;
 		AVLNode d;
-		if (z.getLeft().getHeight() > z.getRight().getHeight()) {
+		if (z.getLeft().getHeight() < z.getRight().getHeight()) {
 			 y =(AVLNode) z.getRight();
 			 a =(AVLNode) y.getLeft();
 			 d =(AVLNode) a.getRight();
