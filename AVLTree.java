@@ -648,7 +648,14 @@ public class AVLTree {
 			larger = this;
 			smaller = t;
 		}
-
+		if (t_rank == -1) {
+			this.insert(x.getKey(), x.getValue());
+			return cost;
+		}else if (this_rank == -1) {
+			t.insert(x.getKey(), x.getValue());
+			this.root = t.getRoot();
+			t.root = null;
+		}
 		  
 		if (x.getKey() > smaller.getRoot().getKey()) { // small<x<big 
 			IAVLNode temp = larger.getRoot();
