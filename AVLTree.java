@@ -58,14 +58,14 @@ public class AVLTree {
 		}
 	}
 
-	private AVLNode root;
+	private IAVLNode root;
 	private int size;
 	
 	public AVLTree() {
 		this(null);
 		this.size = 0;
 	}
-	public AVLTree(AVLNode root) {
+	public AVLTree(IAVLNode root) {
 		this.root = root;
 		this.size = 1;
 	}
@@ -149,8 +149,6 @@ public class AVLTree {
 	 * item with key k already exists in the tree.
 	 */
 	public int insert(int k, String i) {
-		int oldS = this.size ;
-		this.size = oldS+1;
 		if (this.empty()) {
 			this.root = new AVLNode (k,i);
 			return 0;
@@ -159,6 +157,8 @@ public class AVLTree {
 		IAVLNode z = searchPlace(k);
 		//System.out.println("z is: " +z.getKey());
 		if (z.getKey() == k) return -1;
+		int oldS = this.size ;
+		this.size = oldS+1;
 		IAVLNode x = new AVLNode (k,i);
 		x.setHeight(0);
 		int rebalancing = 0;
@@ -431,7 +431,7 @@ public class AVLTree {
 			if (parent.getKey() < y.getKey()) parent.setRight(y);
 			else parent.setLeft(y);
 		}else {
-			this.root = (AVLNode) y;
+			this.root = y;
 		}
 		balancing = fixHeights_R(z, y, a, b, balancing, type);
 		return balancing;
@@ -472,9 +472,14 @@ public class AVLTree {
 		if (parent != null) {
 			if (parent.getKey() < a.getKey()) parent.setRight(a);
 			else parent.setLeft(a);
+<<<<<<< HEAD
 		}
 		else {
 			this.root = (AVLNode) a;
+=======
+		}else {
+			this.root = a;
+>>>>>>> d295c8ff157e53a40b4e573eeebfd5af2f968aaf
 		}
 		balancing = fixHeights_DR(z, y, a, balancing, type);
 		
@@ -665,49 +670,78 @@ public class AVLTree {
 	 */
 	public int join(IAVLNode x, AVLTree t) {
 		int cost=1;
-		int this_tree_rank =-1;
+		int this_rank =-1;
 		int t_rank =-1;
-		AVLTree big=null;
-		AVLTree small = null;
-		if (this.root != null) this_tree_rank = this.root.getHeight();
+		AVLTree larger = null;
+		AVLTree smaller = null;
+		if (this.root != null) this_rank = this.root.getHeight();
 		if (t.getRoot() !=null) t_rank =t.getRoot().getHeight(); 
-		if (t_rank<=this_tree_rank) cost=Math.abs(this_tree_rank-t_rank)+1;
-		if (t_rank >this_tree_rank) {
-			big = t;
-			small =this;
+		cost = Math.abs(this_rank - t_rank) + 1;
+		x.setHeight(Math.min(this_rank, t_rank) + 1);
+		if (t_rank > this_rank) {
+			larger = t;
+			smaller = this;
+		} else {
+			larger = this;
+			smaller = t;
 		}
-		else {
-			big=this;
-			small=t;
-		}
-		if (x.getKey()>small.getRoot().getKey()) { // small<x<big
-			IAVLNode temp = big.getRoot();
-			while (small.getRoot().getHeight() < temp.getHeight()) {
-					temp= temp.getLeft();
-				}
-				IAVLNode parent=temp.getParent();
-				parent.setLeft(x);
-				x.setRight(temp);
-				x.setLeft(t.getRoot());
+
+		  
+		if (x.getKey() > smaller.getRoot().getKey()) { // small<x<big 
+			IAVLNode temp = larger.getRoot();
+			while (smaller.getRoot().getHeight() < temp.getHeight()) {
+				temp = temp.getLeft();
 			}
-			
+			IAVLNode parent = temp.getParent();
+			parent.setLeft(x);
+			x.setRight(temp);
+			x.setLeft(smaller.getRoot());
+			x.setParent(parent);
+		}
+
 		else { // big<x<small
-			IAVLNode temp = big.getRoot();
-			while (small.getRoot().getHeight() < temp.getHeight()) {
-					temp= temp.getRight();
-				}
-				IAVLNode parent=temp.getParent();
-				parent.setRight(x);
-				x.setLeft(temp);
-				x.setRight(t.getRoot());
+			IAVLNode temp = larger.getRoot();
+			while (smaller.getRoot().getHeight() < temp.getHeight()) {
+				temp = temp.getRight();
 			}
-		Balance (x);
-		this.root=(AVLNode) big.getRoot();
+			IAVLNode parent = temp.getParent();
+			parent.setRight(x);
+			x.setLeft(temp);
+			x.setRight(smaller.getRoot());
+		}
+		this.root = larger.root;
+		Balance (x.getRight(), larger.getRoot());
+		//this.root=(AVLNode) big.getRoot();
 		return cost;
 	}
 	
-	public void Balance(IAVLNode x) {
-		
+	public void Balance(IAVLNode x, IAVLNode The_root) {
+		IAVLNode z = x.getParent();
+		while (x.getKey() != The_root.getKey() && x.getHeight() == z.getHeight()) { 
+			if (hightDef(z, x) == 1) { // Case 1
+				promote(z, 0);
+				x = z;
+				z = z.getParent();
+			} else { // Case 2 or Case 3, height deference = 2
+				if (z.getKey() < x.getKey()) {
+					if (hightDef(x, x.getRight()) == 2 && hightDef(x, x.getLeft()) == 1) { // case 2
+						singleRotation(z, 0, 'I');
+						break;
+					} else { // case 3
+						doubleRotation(z, 0, 'I');
+						break;
+						}
+					}else {
+						if (hightDef(x, x.getLeft()) == 2 && hightDef(x, x.getRight()) == 1) { // case 2
+							singleRotation(z, 0, 'I');
+							break;
+						} else { // case 3
+							doubleRotation(z, 0, 'I');
+							break;
+						}
+				}
+			}
+		}
 	}
 
 	/**
