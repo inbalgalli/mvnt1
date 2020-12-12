@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
 
@@ -19,47 +20,90 @@ public class AVLTree {
 				// System.out.println(i + ": ");
 				 //AVLTest test = new AVLTest();
 				 //test.testDelete(); }
-		  AVLTree tree = new AVLTree(); 
-		  tree.insert(2, "a");
-		  tree.insert(3, "c");
-		  tree.insert(1, "b");
-		  tree.insert(6, "b");
-		  tree.insert(4, "b");
-		  tree.insert(5, "b");
-		  tree.insert(7, "b");
+		 // AVLTree tree = new AVLTree(); 
+		  //tree.insert(2, "a");
+		  //tree.insert(3, "c");
+		  //tree.insert(1, "b");
+		  //tree.insert(6, "b");
+		  //tree.insert(4, "b");
+		  //tree.insert(5, "b");
+		  //tree.insert(7, "b");
 
-		  Test.printTree(tree.getRoot(),0);
-		  System.out.println("TREE SIZE: "+ tree.size());
+		  //Test.printTree(tree.getRoot(),0);
+		  //System.out.println("TREE SIZE: "+ tree.size());
 		  //print(tree.getRoot());
 		  //tree.delete(7);
 		  //System.out.println("delete node 7: " + tree.delete(7));
 		  //Test.printTree(tree.getRoot(),0);
+		  //System.out.println("TREE SIZE: "+ tree.size());
 		  //System.out.println("delete node 5: " + tree.delete(5));
 		  //Test.printTree(tree.getRoot(),0);
 		 //System.out.println("delete node 3: " + tree.delete(3));
 		  //Test.printTree(tree.getRoot(),0);
 		  //System.out.println("delete node 6: " + tree.delete(6));
 		  //Test.printTree(tree.getRoot(),0);
-		  //tree.delete(6);
+		//  tree.delete(6);
+		  //Test.printTree(tree.getRoot(),0);
+		  //System.out.println("TREE SIZE: "+ tree.size());
+		  //tree.delete(1);
+		  //Test.printTree(tree.getRoot(),0);
+		  //System.out.println("TREE SIZE: "+ tree.size());
+		  //tree.delete(5);
+		  //Test.printTree(tree.getRoot(),0);
+		  //System.out.println("TREE SIZE: "+ tree.size());
 		  //tree.delete(1);
 		  //tree.delete(5);
 		 // print(tree.getRoot());
 		  //Test.printTree(tree.getRoot(),0);
-		  AVLTree[] t = tree.split(1);
-		  System.out.println("Small tree: ");
-		  Test.printTree(t[0].getRoot(),0);
-		  System.out.println("TREE SIZE: "+ t[0].size());
-		  System.out.println("Big tree: ");
-		  Test.printTree(t[1].getRoot(),0);
-		  System.out.println("TREE SIZE: "+ t[1].size());
+		  //AVLTree[] t = tree.split(7);
+		  //System.out.println("Small tree: ");
+		  //Test.printTree(t[0].getRoot(),0);
+		  //System.out.println("TREE SIZE: "+ t[0].size());
+		  //System.out.println("Big tree: ");
+		  //Test.printTree(t[1].getRoot(),0);
+		  //System.out.println("TREE SIZE: "+ t[1].size());
 		 // Test.printTree(tree.getRoot(),0);
 		 // AVLTree[] t = tree.split(6);
 		 // System.out.println("Small tree: ");
 		 // Test.printTree(t[0].getRoot(),0);
 		 // System.out.println("Big tree: ");
 		  //Test.printTree(t[1].getRoot(),0);
-		  }
-    
+		 int size = 20000;
+		 Integer[] arr= new Integer[size];
+		 for (int i=0; i<size;i++) {
+			 arr[i]=i;
+		 }
+		 List<Integer> lst= Arrays.asList(arr);
+		 Collections.shuffle(lst);
+		 lst.toArray(arr);
+		// System.out.println(Arrays.toString(arr));
+		 int num_swaps=0;
+		 int i=0;
+		 boolean check = true;
+		 while (check) {
+			 i=0;
+			 check=false;
+			 while (arr[i] < arr[i+1]) {
+				 i+=1;
+				 if (i==size-1) break;
+				 }
+			 if (i<size-1) {
+		     while (arr[i] >arr[i+1]) {
+		    	check=true;
+				int temp = arr[i];
+				arr[i] = arr[i+1];
+				arr[i+1] = temp;
+				num_swaps+=1;
+				i+=1;
+				if (i==size-1) break;
+				 }
+			 }
+			 }	 
+		 
+		// System.out.println(Arrays.toString(arr));
+		 System.out.println(num_swaps);
+		 }
+
 	public static void print2(IAVLNode x) {
 		if (x == null) System.out.println("null");
 		else {
@@ -349,14 +393,13 @@ public class AVLTree {
 		int height_rightSon = parent.getRight().getHeight();
 		int height_leftSon = parent.getLeft().getHeight();
 		int num_rotates =0;
-		//System.out.println("heights of - parent: " + height_parent + " right son: " + height_rightSon + " left son: " + height_leftSon);
 		while (height_parent != Math.max(height_rightSon, height_leftSon) +1 ||
 				Math.abs(height_rightSon - height_leftSon) > 1) { // if neither is true -> we balanced the tree 
 			if (height_leftSon == height_rightSon) { // case 1
 				parent.setHeight(height_leftSon+1);
 				parent=parent.getParent();
 				num_rotates+=1;
-				//System.out.println("case 1");
+				System.out.println("case 1");
 			}
 			else {
 				AVLNode maxSon;
@@ -365,7 +408,7 @@ public class AVLTree {
 				int max_rightGrandson_height = maxSon.getRight().getHeight();
 				int max_leftGrandson_height = maxSon.getLeft().getHeight();
 				if (max_rightGrandson_height == max_leftGrandson_height ) {//case 2
-					//System.out.println("case 2");
+					System.out.println("case 2");
 					num_rotates = singleRotation((AVLNode) parent,num_rotates, 'D');
 					return num_rotates;
 				}
@@ -373,14 +416,14 @@ public class AVLTree {
 					(maxSon == (AVLNode) parent.getRight() && max_rightGrandson_height > max_leftGrandson_height )) { //case 3
 					num_rotates = singleRotation((AVLNode) parent, num_rotates, 'D');
 					parent=maxSon;
-					//System.out.println("case 3");
+					System.out.println("case 3");
 				}
 				else { // case 4
 					IAVLNode temp=parent;
 					if (maxSon.getKey() == parent.getLeft().getKey()) parent = maxSon.getRight();
 					else parent=maxSon.getLeft();
 					num_rotates = doubleRotation((AVLNode) temp, num_rotates, 'D');
-					//System.out.println("case 4");
+					System.out.println("case 4");
 				}
 				
 			}
@@ -755,7 +798,6 @@ public class AVLTree {
 			larger = this;
 			smaller = t;
 		}
-		System.out.println("This rank: " + this_rank);
 		if (t_rank == -1 || t.getRoot().getKey() == -1) {
 			this.insert(x.getKey(), x.getValue());
 			return cost;
