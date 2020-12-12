@@ -727,7 +727,7 @@ public class AVLTree {
 				temp = temp.getLeft();
 			}
 			IAVLNode parent = temp.getParent();
-			parent.setLeft(x);
+			if (parent != null) parent.setLeft(x);
 			x.setRight(temp);
 			temp.setParent(x);
 			x.setLeft(smaller.getRoot());
@@ -741,7 +741,7 @@ public class AVLTree {
 				temp = temp.getRight();
 			}
 			IAVLNode parent = temp.getParent();
-			parent.setRight(x);
+			if (parent != null) parent.setRight(x);
 			x.setLeft(temp);
 			temp.setParent(x);
 			x.setRight(smaller.getRoot());
