@@ -341,12 +341,12 @@ public class AVLTree {
 				int max_leftGrandson_height = maxSon.getLeft().getHeight();
 				if (max_rightGrandson_height == max_leftGrandson_height ) {//case 2
 					//System.out.println("case 2");
-					num_rotates = singleRotation(parent,num_rotates, 'D');
+					num_rotates = singleRotation((AVLNode) parent,num_rotates, 'D');
 					return num_rotates;
 				}
 				if ((maxSon == (AVLNode) parent.getLeft() &&  max_rightGrandson_height < max_leftGrandson_height) ||
 					(maxSon == (AVLNode) parent.getRight() && max_rightGrandson_height > max_leftGrandson_height )) { //case 3
-					num_rotates = singleRotation(parent, num_rotates, 'D');
+					num_rotates = singleRotation((AVLNode) parent, num_rotates, 'D');
 					parent=maxSon;
 					//System.out.println("case 3");
 				}
@@ -354,7 +354,7 @@ public class AVLTree {
 					IAVLNode temp=parent;
 					if (maxSon.getKey() == parent.getLeft().getKey()) parent = maxSon.getRight();
 					else parent=maxSon.getLeft();
-					num_rotates = doubleRotation(temp, num_rotates, 'D');
+					num_rotates = doubleRotation((AVLNode) temp, num_rotates, 'D');
 					//System.out.println("case 4");
 				}
 				
@@ -363,7 +363,11 @@ public class AVLTree {
 			height_parent = parent.getHeight();
 			height_rightSon = parent.getRight().getHeight();
 			height_leftSon = parent.getLeft().getHeight();
-		}	   
+		}	
+		while (parent != null) {
+			updateNodeSize((AVLNode) parent);
+			parent=parent.getParent();
+		}
 			   return num_rotates;	
 		  
 	}
@@ -409,25 +413,26 @@ public class AVLTree {
 		if (parent.getRight().getKey() == k) parent.setRight(son);
 		else parent.setLeft(son);
 		son.setParent(parent);
+		updateNodeSize((AVLNode) parent);
 	}
 	
-	private int singleRotation(IAVLNode z, int balancing, char type) {
-		IAVLNode parent = z.getParent();
-		IAVLNode y;
-		IAVLNode a;
-		IAVLNode b;
+	private int singleRotation(AVLNode z, int balancing, char type) {
+		AVLNode parent = (AVLNode) z.getParent();
+		AVLNode y;
+		AVLNode a;
+		AVLNode b;
 		if (z.getLeft().getHeight() < z.getRight().getHeight()) {
-			 y = z.getRight();
-			 a = y.getLeft();
-			 b = y.getRight();
+			 y = (AVLNode) z.getRight();
+			 a = (AVLNode) y.getLeft();
+			 b = (AVLNode) y.getRight();
 			 y.setLeft(z);
 			 y.setRight(b);
 			 z.setRight(a);
 		}
 		else {
-			 y = z.getLeft();
-			 b = y.getLeft();
-			 a = y.getRight();
+			 y = (AVLNode) z.getLeft();
+			 b = (AVLNode) y.getLeft();
+			 a = (AVLNode) y.getRight();
 			 y.setLeft(b);
 			 y.setRight(z);
 			 z.setLeft(a);
@@ -436,6 +441,8 @@ public class AVLTree {
 		b.setParent(y);
 		a.setParent(z);
 		y.setParent(parent);
+		updateNodeSize(z);
+	    updateNodeSize(y);
 		if (parent != null) {
 			if (parent.getKey() < y.getKey()) parent.setRight(y);
 			else parent.setLeft(y);
@@ -447,27 +454,27 @@ public class AVLTree {
 	}
 	
 
-	private int doubleRotation(IAVLNode z, int balancing, char type) {
-		IAVLNode parent = z.getParent();
-		IAVLNode y;
-		IAVLNode a;
-		IAVLNode c;
-		IAVLNode d;
+	private int doubleRotation(AVLNode z, int balancing, char type) {
+		AVLNode parent = (AVLNode) z.getParent();
+		AVLNode y;
+		AVLNode a;
+		AVLNode c;
+		AVLNode d;
 		if (z.getLeft().getHeight() < z.getRight().getHeight()) {
-			 y = z.getRight();
-			 a = y.getLeft();
-			 d = a.getRight();
-			 c = a.getLeft();
+			 y = (AVLNode) z.getRight();
+			 a = (AVLNode) y.getLeft();
+			 d = (AVLNode) a.getRight();
+			 c = (AVLNode) a.getLeft();
 			 a.setLeft(z);
 			 a.setRight(y);
 			 z.setRight(c);
 			 y.setLeft(d);
 		}
 		else {
-			 y = z.getLeft();
-			 a = y.getRight();
-			 c = a.getRight();
-			 d = a.getLeft();
+			 y = (AVLNode) z.getLeft();
+			 a = (AVLNode) y.getRight();
+			 c = (AVLNode) a.getRight();
+			 d = (AVLNode) a.getLeft();
 			 a.setLeft(y);
 			 a.setRight(z);
 			 z.setLeft(c);
@@ -478,6 +485,9 @@ public class AVLTree {
 		c.setParent(z);
 		d.setParent(y);
 		a.setParent(parent);
+		updateNodeSize(z);
+	    updateNodeSize(y);
+	    updateNodeSize(a);
 		if (parent != null) {
 			if (parent.getKey() < a.getKey()) parent.setRight(a);
 			else parent.setLeft(a);
