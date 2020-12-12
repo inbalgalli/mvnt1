@@ -13,6 +13,52 @@ import java.util.Stack;
  */
 
 public class AVLTree {
+	
+	 public static void main(String[] args) { 
+			// for (int i=0;i<50;i++) {
+				// System.out.println(i + ": ");
+				 //AVLTest test = new AVLTest();
+				 //test.testDelete(); }
+		  AVLTree tree = new AVLTree(); 
+		  tree.insert(2, "a");
+		  tree.insert(3, "c");
+		  tree.insert(1, "b");
+		  tree.insert(6, "b");
+		  tree.insert(4, "b");
+		  tree.insert(5, "b");
+		  tree.insert(7, "b");
+
+		  Test.printTree(tree.getRoot(),0);
+		  System.out.println("TREE SIZE: "+ tree.size());
+		  //print(tree.getRoot());
+		  //tree.delete(7);
+		  //System.out.println("delete node 7: " + tree.delete(7));
+		  //Test.printTree(tree.getRoot(),0);
+		  //System.out.println("delete node 5: " + tree.delete(5));
+		  //Test.printTree(tree.getRoot(),0);
+		 //System.out.println("delete node 3: " + tree.delete(3));
+		  //Test.printTree(tree.getRoot(),0);
+		  //System.out.println("delete node 6: " + tree.delete(6));
+		  //Test.printTree(tree.getRoot(),0);
+		  //tree.delete(6);
+		  //tree.delete(1);
+		  //tree.delete(5);
+		 // print(tree.getRoot());
+		  //Test.printTree(tree.getRoot(),0);
+		  AVLTree[] t = tree.split(1);
+		  System.out.println("Small tree: ");
+		  Test.printTree(t[0].getRoot(),0);
+		  System.out.println("TREE SIZE: "+ t[0].size());
+		  System.out.println("Big tree: ");
+		  Test.printTree(t[1].getRoot(),0);
+		  System.out.println("TREE SIZE: "+ t[1].size());
+		 // Test.printTree(tree.getRoot(),0);
+		 // AVLTree[] t = tree.split(6);
+		 // System.out.println("Small tree: ");
+		 // Test.printTree(t[0].getRoot(),0);
+		 // System.out.println("Big tree: ");
+		  //Test.printTree(t[1].getRoot(),0);
+		  }
     
 	public static void print2(IAVLNode x) {
 		if (x == null) System.out.println("null");
@@ -293,7 +339,6 @@ public class AVLTree {
 			else node=node.getRight();  
 		}
 		if (node.getKey() == -1) return -1; //there isn't any node with key k in the tree
-		else this.size -=1;
 		
 		//-----------second part----------- deleting the node
 		IAVLNode parent = node.getParent();
@@ -632,7 +677,8 @@ public class AVLTree {
 	 * precondition: none postcondition: none
 	 */
 	public int size() {
-		return this.size;
+		AVLNode r = (AVLNode) this.root;
+		return r.getNodeSize();
 	}
 
 	/**
