@@ -755,7 +755,6 @@ public class AVLTree {
 			larger = this;
 			smaller = t;
 		}
-		System.out.println("This rank: " + this_rank);
 		if (t_rank == -1 || t.getRoot().getKey() == -1) {
 			this.insert(x.getKey(), x.getValue());
 			return cost;
