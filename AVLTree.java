@@ -738,6 +738,7 @@ public class AVLTree {
 			smaller.getRoot().setParent(x);
 			x.setParent(parent);
 		}
+		this.size = larger.size + smaller.size +1;
 		updateNodeSize ((AVLNode) x);
 		this.root = larger.root;
 		Balance (x.getRight(), larger.getRoot());
