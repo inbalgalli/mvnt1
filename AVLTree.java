@@ -27,19 +27,26 @@ public class AVLTree {
 	  tree.insert(4, "b");
 	  tree.insert(5, "b");
 	  tree.insert(7, "b");
-	  
+	  Test.printTree(tree.getRoot(),0);
 	  //print(tree.getRoot());
-	  //tree.delete(7);
+	  System.out.println("delete node 7: " + tree.delete(7));
+	  Test.printTree(tree.getRoot(),0);
+	  System.out.println("delete node 5: " + tree.delete(5));
+	  Test.printTree(tree.getRoot(),0);
+	 System.out.println("delete node 3: " + tree.delete(3));
+	  Test.printTree(tree.getRoot(),0);
+	  System.out.println("delete node 6: " + tree.delete(6));
+	  Test.printTree(tree.getRoot(),0);
 	  //tree.delete(6);
 	  //tree.delete(1);
 	  //tree.delete(5);
 	 // print(tree.getRoot());
-	  Test.printTree(tree.getRoot(),0);
-	  AVLTree[] t = tree.split(6);
-	  System.out.println("Small tree: ");
-	  Test.printTree(t[0].getRoot(),0);
-	  System.out.println("Big tree: ");
-	  Test.printTree(t[1].getRoot(),0);
+	 // Test.printTree(tree.getRoot(),0);
+	 // AVLTree[] t = tree.split(6);
+	 // System.out.println("Small tree: ");
+	 // Test.printTree(t[0].getRoot(),0);
+	 // System.out.println("Big tree: ");
+	  //Test.printTree(t[1].getRoot(),0);
 	  }
 	 
 	public static void print(IAVLNode x) {
@@ -66,6 +73,7 @@ public class AVLTree {
 		this.size = 1;
 	}
 	
+	
 	public AVLNode getPredecessor(AVLNode node) {
 		if (node.getLeft().getKey() != -1) {
 			node=(AVLNode) node.getLeft();
@@ -82,6 +90,11 @@ public class AVLTree {
 		return null;
 	}
 	
+	public void updateNodeSize(AVLNode node) {
+		AVLNode r = (AVLNode) node.getRight();
+		AVLNode l = (AVLNode) node.getLeft();
+		node.setNodeSize(r.getNodeSize()+l.getNodeSize()+1);
+	}
 	public AVLNode getSuccessor(AVLNode node) {
 		if (node.getRight().getKey() != -1) {
 			node=(AVLNode) node.getRight();
@@ -223,9 +236,13 @@ public class AVLTree {
 				y.setHeight(y.getHeight() +1);
 				i++;
 			}
-			else z.setHeight(z.getHeight() -2);
-			i = i+2;
-		}else {
+			else {
+				z.setHeight(z.getHeight() -2);
+				i = i+2;
+			}
+			
+		}
+		else {
 			z.setHeight(z.getHeight() -1);
 			i++;
 		}
@@ -313,6 +330,7 @@ public class AVLTree {
 			if (height_leftSon == height_rightSon) { // case 1
 				parent.setHeight(height_leftSon+1);
 				parent=parent.getParent();
+				num_rotates+=1;
 				//System.out.println("case 1");
 			}
 			else {
@@ -424,7 +442,7 @@ public class AVLTree {
 		}else {
 			this.root = y;
 		}
-		balancing = fixHeights_R(z, y, a, b, balancing, type);
+		balancing = fixHeights_R(z, y, a, b, balancing, type) +1;
 		return balancing;
 	}
 	
@@ -467,14 +485,8 @@ public class AVLTree {
 		}else {
 			this.root = a;
 		}
-<<<<<<< HEAD
-		else {
-			this.root = a;
-		}
-=======
 
->>>>>>> 87d202b1068e128780114891bdb9d7f008f34e3b
-		balancing = fixHeights_DR(z, y, a, balancing, type);
+		balancing = fixHeights_DR(z, y, a, balancing, type)+2;
 		
 		return balancing;
 	}
@@ -831,6 +843,7 @@ public class AVLTree {
 			  this.left = l;
 			  r.parent = this;
 			  l.parent = this;
+			  this.size=1;
 		  }
 
 		public AVLNode() { //constructor for virtual node
@@ -838,6 +851,7 @@ public class AVLTree {
 			  this.value = null;
 			  this.height = -1;
 			  this.rank = -1;
+			  this.size =0;
 		  }
 			public int getKey()
 			{
@@ -854,6 +868,12 @@ public class AVLTree {
 			public void setValue(String value2) {
 				this.value=value2;
 					
+			}
+			public int getNodeSize() {
+				return this.size; 
+			}
+			public void setNodeSize(int i) {
+				this.size=i;
 			}
 			
 			public void setLeft(IAVLNode node)
