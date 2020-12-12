@@ -15,10 +15,10 @@ import java.util.Stack;
 public class AVLTree {
     
 	 public static void main(String[] args) { 
-		 for (int i=0;i<50;i++) {
-			 System.out.println(i + ": ");
-			 AVLTest test = new AVLTest();
-			 test.testDelete(); }
+		// for (int i=0;i<50;i++) {
+			// System.out.println(i + ": ");
+			 //AVLTest test = new AVLTest();
+			 //test.testDelete(); }
 	  AVLTree tree = new AVLTree(); 
 	  tree.insert(2, "a");
 	  tree.insert(3, "c");
@@ -27,12 +27,19 @@ public class AVLTree {
 	  tree.insert(4, "b");
 	  tree.insert(5, "b");
 	  tree.insert(7, "b");
+	  
 	  //print(tree.getRoot());
-	 // tree.delete(7);
-	 // tree.delete(6);
-	 // tree.delete(1);
+	  //tree.delete(7);
+	  //tree.delete(6);
+	  //tree.delete(1);
 	  //tree.delete(5);
 	 // print(tree.getRoot());
+	  Test.printTree(tree.getRoot(),0);
+	  AVLTree[] t = tree.split(6);
+	  System.out.println("Small tree: ");
+	  Test.printTree(t[0].getRoot(),0);
+	  System.out.println("Big tree: ");
+	  Test.printTree(t[1].getRoot(),0);
 	  }
 	 
 	public static void print(IAVLNode x) {
@@ -460,6 +467,7 @@ public class AVLTree {
 		}else {
 			this.root = a;
 		}
+
 		balancing = fixHeights_DR(z, y, a, balancing, type);
 		
 		return balancing;
@@ -637,7 +645,33 @@ public class AVLTree {
 	 * none
 	 */
 	public AVLTree[] split(int x) {
-		return null;
+		AVLTree bigTree;
+		AVLTree smallTree;
+		IAVLNode node = this.root;
+		while (node.getKey() != x && node.getKey() != -1) {
+			if(node.getKey() > x) node=node.getLeft();
+			else node=node.getRight();
+		}
+		AVLTree temp;
+		bigTree= new AVLTree(node.getRight());
+		smallTree= new AVLTree(node.getLeft());
+		IAVLNode parent= node.getParent();
+		while (parent != null) {
+			IAVLNode parents_node = new AVLNode(parent.getKey(),parent.getValue());
+			if (parent.getKey() > node.getKey()) {
+				parent.getRight().setParent(null);
+				temp=new AVLTree(parent.getRight());
+				bigTree.join(parents_node, temp);
+			}
+			else {
+				temp=new AVLTree(parent.getLeft());
+				smallTree.join(parents_node, temp);
+			}
+			parent=parent.getParent();
+		}
+		
+		AVLTree[] array = {smallTree, bigTree};
+		return array;
 	}
 
 	/**
@@ -681,7 +715,9 @@ public class AVLTree {
 			IAVLNode parent = temp.getParent();
 			parent.setLeft(x);
 			x.setRight(temp);
+			temp.setParent(x);
 			x.setLeft(smaller.getRoot());
+			smaller.getRoot().setParent(x);
 			x.setParent(parent);
 		}
 
@@ -693,7 +729,10 @@ public class AVLTree {
 			IAVLNode parent = temp.getParent();
 			parent.setRight(x);
 			x.setLeft(temp);
+			temp.setParent(x);
 			x.setRight(smaller.getRoot());
+			smaller.getRoot().setParent(x);
+			x.setParent(parent);
 		}
 		this.root = larger.root;
 		Balance (x.getRight(), larger.getRoot());
