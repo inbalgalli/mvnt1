@@ -38,25 +38,14 @@ public class AVLTree {
 	public static void print(IAVLNode x) {
 		if (x == null) System.out.println("null");
 		else {
-		System.out.println(x.getKey() + " height: " + x.getHeight());
+		//System.out.println(x.getKey() + " height: " + x.getHeight());
 		if (x.getLeft().getKey() != -1)
 			print(x.getLeft());
 		if (x.getRight().getKey() != -1)
 			print(x.getRight());
 		}
 	}
-	public static void printR(IAVLNode x) {
-		while (x.getRight().getKey() != -1) {
-			System.out.println("node: "+ x.getKey() + " left kid: " + x.getLeft().getKey() + " right kid: "+ x.getRight().getKey());
-			x = x.getRight();
-		}
-	}
-	public static void printL(IAVLNode x) {
-		while (x.getLeft().getKey() != -1) {
-			System.out.println("node: "+ x.getKey() + " left kid: " + x.getLeft().getKey() + " right kid: "+ x.getRight().getKey());
-			x = x.getLeft();
-		}
-	}
+
 
 	private IAVLNode root;
 	private int size;
@@ -202,7 +191,7 @@ public class AVLTree {
 
 	}
 	
-	private int hightDef (IAVLNode parent, IAVLNode son) { // check the hight difference between parent an OTHER son (not the son that is a param)
+	private int hightDef (IAVLNode parent, IAVLNode son) { // check the height difference between parent an OTHER son (not the son that is a param)
 		if (parent.getLeft().getKey() == son.getKey()) {
 			return parent.getHeight() - parent.getRight().getHeight();
  		}else {
@@ -217,11 +206,6 @@ public class AVLTree {
 		return cnt+1;
 	}
 	
-	private int demote (IAVLNode node, int cnt) {
-		int h = node.getHeight();
-		node.setHeight(h+1);
-		return cnt+1;
-	}	
 	
 	private int fixHeights_R (IAVLNode z, IAVLNode y, IAVLNode a, IAVLNode b, int cnt, char type) {
 		int i = 0;
@@ -472,14 +456,9 @@ public class AVLTree {
 		if (parent != null) {
 			if (parent.getKey() < a.getKey()) parent.setRight(a);
 			else parent.setLeft(a);
-<<<<<<< HEAD
-		}
-		else {
-			this.root = (AVLNode) a;
-=======
+
 		}else {
 			this.root = a;
->>>>>>> d295c8ff157e53a40b4e573eeebfd5af2f968aaf
 		}
 		balancing = fixHeights_DR(z, y, a, balancing, type);
 		
