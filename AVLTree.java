@@ -481,7 +481,7 @@ public class AVLTree {
 			else parent.setLeft(a);
 		}
 		else {
-			this.root = (AVLNode) a;
+			this.root = a;
 		}
 		balancing = fixHeights_DR(z, y, a, balancing, type);
 		
@@ -679,6 +679,7 @@ public class AVLTree {
 				bigTree.join(parents_node, temp);
 			}
 			else {
+				parent.getLeft().setParent(null);
 				temp=new AVLTree(parent.getLeft());
 				smallTree.join(parents_node, temp);
 			}
