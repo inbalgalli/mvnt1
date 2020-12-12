@@ -14,19 +14,19 @@ import java.util.Stack;
 
 public class AVLTree {
     
-	 public static void main(String[] args) { 
+	// public static void main(String[] args) { 
 		// for (int i=0;i<50;i++) {
 			// System.out.println(i + ": ");
 			 //AVLTest test = new AVLTest();
 			 //test.testDelete(); }
-	  AVLTree tree = new AVLTree(); 
-	  tree.insert(2, "a");
-	  tree.insert(3, "c");
-	  tree.insert(1, "b");
-	  tree.insert(6, "b");
-	  tree.insert(4, "b");
-	  tree.insert(5, "b");
-	  tree.insert(7, "b");
+	  //AVLTree tree = new AVLTree(); 
+	  //tree.insert(2, "a");
+	  //tree.insert(3, "c");
+	  //tree.insert(1, "b");
+	  //tree.insert(6, "b");
+	 // tree.insert(4, "b");
+	 // tree.insert(5, "b");
+	  //tree.insert(7, "b");
 	  
 	  //print(tree.getRoot());
 	  //tree.delete(7);
@@ -34,25 +34,37 @@ public class AVLTree {
 	  //tree.delete(1);
 	  //tree.delete(5);
 	 // print(tree.getRoot());
-	  Test.printTree(tree.getRoot(),0);
-	  AVLTree[] t = tree.split(6);
-	  System.out.println("Small tree: ");
-	  Test.printTree(t[0].getRoot(),0);
-	  System.out.println("Big tree: ");
-	  Test.printTree(t[1].getRoot(),0);
-	  }
+	 // Test.printTree(tree.getRoot(),0);
+	  //AVLTree[] t = tree.split(6);
+	 // System.out.println("Small tree: ");
+	  //Test.printTree(t[0].getRoot(),0);
+	  //System.out.println("Big tree: ");
+	 // Test.printTree(t[1].getRoot(),0);
+	 // }
 	 
-	public static void print(IAVLNode x) {
+	public static void print2(IAVLNode x) {
 		if (x == null) System.out.println("null");
 		else {
 		//System.out.println(x.getKey() + " height: " + x.getHeight());
+		if (x.getLeft().getKey() != -1) {
+			print(x.getLeft());
+		}
+		if (x.getRight().getKey() != -1) {
+			print(x.getRight());
+		}
+		else {
+			System.out.println(x.getKey());
+		}
+		}
+	}
+
+	public static void print(IAVLNode x) {
+		System.out.println(x.getKey());
 		if (x.getLeft().getKey() != -1)
 			print(x.getLeft());
 		if (x.getRight().getKey() != -1)
 			print(x.getRight());
-		}
 	}
-
 
 	private IAVLNode root;
 	private int size;
@@ -223,8 +235,11 @@ public class AVLTree {
 				y.setHeight(y.getHeight() +1);
 				i++;
 			}
-			else z.setHeight(z.getHeight() -2);
-			i = i+2;
+			else {
+				z.setHeight(z.getHeight() -2);
+				i = i+2;
+			}
+			
 		}else {
 			z.setHeight(z.getHeight() -1);
 			i++;
@@ -424,7 +439,7 @@ public class AVLTree {
 		}else {
 			this.root = y;
 		}
-		balancing = fixHeights_R(z, y, a, b, balancing, type);
+		balancing = fixHeights_R(z, y, a, b, balancing, type) + 1;
 		return balancing;
 	}
 	
@@ -467,14 +482,8 @@ public class AVLTree {
 		}else {
 			this.root = a;
 		}
-<<<<<<< HEAD
-		else {
-			this.root = a;
-		}
-=======
 
->>>>>>> 87d202b1068e128780114891bdb9d7f008f34e3b
-		balancing = fixHeights_DR(z, y, a, balancing, type);
+		balancing = fixHeights_DR(z, y, a, balancing, type) + 2;
 		
 		return balancing;
 	}
@@ -689,13 +698,13 @@ public class AVLTree {
 	 * keys(). t/tree might be empty (rank = -1). postcondition: none
 	 */
 	public int join(IAVLNode x, AVLTree t) {
-		int cost=1;
-		int this_rank =-1;
-		int t_rank =-1;
+		int cost = 1;
+		int this_rank = -1;
+		int t_rank = -1;
 		AVLTree larger = null;
 		AVLTree smaller = null;
 		if (this.root != null) this_rank = this.root.getHeight();
-		if (t.getRoot() !=null) t_rank =t.getRoot().getHeight(); 
+		if (t.getRoot() != null) t_rank = t.getRoot().getHeight(); 
 		cost = Math.abs(this_rank - t_rank) + 1;
 		x.setHeight(Math.min(this_rank, t_rank) + 1);
 		if (t_rank > this_rank) {
@@ -712,6 +721,7 @@ public class AVLTree {
 			t.insert(x.getKey(), x.getValue());
 			this.root = t.getRoot();
 			t.root = null;
+			return cost;
 		}
 		  
 		if (x.getKey() > smaller.getRoot().getKey()) { // small<x<big 
