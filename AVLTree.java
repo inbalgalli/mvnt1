@@ -162,18 +162,18 @@ public class AVLTree {
 				} else { // Case 2 or Case 3, height deference = 2
 					if (z.getKey() < x.getKey()) {
 						if (hightDef(x, x.getRight()) == 2 && hightDef(x, x.getLeft()) == 1) { // case 2
-							rebalancing = singleRotation(z, rebalancing, 'I');
+							rebalancing = singleRotation((AVLNode) z, rebalancing, 'I');
 							break;
 						} else { // case 3
-							rebalancing = doubleRotation(z, rebalancing, 'I');
+							rebalancing = doubleRotation((AVLNode) z, rebalancing, 'I');
 							break;
 							}
 						}else {
 							if (hightDef(x, x.getLeft()) == 2 && hightDef(x, x.getRight()) == 1) { // case 2
-								rebalancing = singleRotation(z, rebalancing, 'I');
+								rebalancing = singleRotation((AVLNode) z, rebalancing, 'I');
 								break;
 							} else { // case 3
-								rebalancing = doubleRotation(z, rebalancing, 'I');
+								rebalancing = doubleRotation((AVLNode) z, rebalancing, 'I');
 								break;
 							}
 					}
@@ -770,18 +770,18 @@ public class AVLTree {
 			} else { // Case 2 or Case 3, height deference = 2
 				if (z.getKey() < x.getKey()) {
 					if (hightDef(x, x.getRight()) == 2 && hightDef(x, x.getLeft()) == 1) { // case 2
-						singleRotation(z, 0, 'I');
+						singleRotation((AVLNode) z, 0, 'I');
 						break;
 					} else { // case 3
-						doubleRotation(z, 0, 'I');
+						doubleRotation((AVLNode) z, 0, 'I');
 						break;
 						}
 					}else {
 						if (hightDef(x, x.getLeft()) == 2 && hightDef(x, x.getRight()) == 1) { // case 2
-							singleRotation(z, 0, 'I');
+							singleRotation((AVLNode) z, 0, 'I');
 							break;
 						} else { // case 3
-							doubleRotation(z, 0, 'I');
+							doubleRotation((AVLNode) z, 0, 'I');
 							break;
 						}
 				}
