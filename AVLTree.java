@@ -755,10 +755,10 @@ public class AVLTree {
 			larger = this;
 			smaller = t;
 		}
-		if (t_rank == -1) {
+		if (t_rank == -1 || t.getRoot().getKey() == -1) {
 			this.insert(x.getKey(), x.getValue());
 			return cost;
-		}else if (this_rank == -1) {
+		}else if (this_rank == -1 || this.getRoot().getKey() == -1) {
 			t.insert(x.getKey(), x.getValue());
 			this.root = t.getRoot();
 			this.size = t.size + 1;
@@ -802,7 +802,6 @@ public class AVLTree {
 			updateNodeSize ((AVLNode) x);
 			x = x.getParent();
 		}
-		//this.root=(AVLNode) big.getRoot();
 		return cost;
 	}
 	
