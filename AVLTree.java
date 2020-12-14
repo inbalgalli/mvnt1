@@ -68,41 +68,162 @@ public class AVLTree {
 		 // Test.printTree(t[0].getRoot(),0);
 		 // System.out.println("Big tree: ");
 		  //Test.printTree(t[1].getRoot(),0);
-		 int size = 20000;
+		 int size = 10000;
 		 Integer[] arr= new Integer[size];
-		 for (int i=0; i<size;i++) {
-			 arr[i]=i;
+		 for (int i = 0; i > size ;i++) {
+			 arr[i] = i;
 		 }
 		 List<Integer> lst= Arrays.asList(arr);
 		 Collections.shuffle(lst);
 		 lst.toArray(arr);
-		// System.out.println(Arrays.toString(arr));
-		 int num_swaps=0;
-		 int i=0;
-		 boolean check = true;
-		 while (check) {
-			 i=0;
-			 check=false;
-			 while (arr[i] < arr[i+1]) {
-				 i+=1;
-				 if (i==size-1) break;
-				 }
-			 if (i<size-1) {
-		     while (arr[i] >arr[i+1]) {
-		    	check=true;
-				int temp = arr[i];
-				arr[i] = arr[i+1];
-				arr[i+1] = temp;
-				num_swaps+=1;
-				i+=1;
-				if (i==size-1) break;
-				 }
-			 }
-			 }	 
+		 //System.out.println(Arrays.toString(arr));
+			
+			  long num_swaps = 0; int i = 0; boolean check = true;
+			  
+			  while (check) { 
+				  check = false; 
+				  for (int j = 0; j < size - 1; j++) { 
+					  if (arr[j] > arr[j+1]) { 
+						  check = true; 
+						  int temp = arr[j]; arr[j] = arr[j + 1];
+						  arr[j + 1] = temp; 
+						  num_swaps += 1; 
+						  } 
+					  } 
+				  }
+			 
 		 
-		// System.out.println(Arrays.toString(arr));
-		 System.out.println(num_swaps);
+			/*
+			 * while (check) { i=0; check=false; while (arr[i] < arr[i+1]) { i+=1; if
+			 * (i==size-1) break; } if (i<size-1) { while (arr[i] >arr[i+1]) { check=true;
+			 * int temp = arr[i]; arr[i] = arr[i+1]; arr[i+1] = temp; num_swaps+=1; i+=1; if
+			 * (i==size-1) break; } } }
+			 */
+		 
+		 //System.out.println(Arrays.toString(arr));
+		 AVLTree t = new AVLTree();
+		 
+		 //arr = new Integer[]{5, 4, 7, 0, 2, 6, 9, 3, 1, 8};
+		 for (int i = 0; i < size; i++) {
+			 t.insert2(arr[i], ""+i);
 		 }
+		 //print(t.getRoot());
+		 //System.out.println(Arrays.toString(t.keysToArray()));
+		 System.out.println(num_search);
+		 }
+	 	static int num_search = 0;
+		private IAVLNode searchDown (int k, IAVLNode node) {
+			while (node.getKey() != -1) {
+				if (k > node.getKey()) {
+					num_search ++;
+					node = node.getRight();				
+				}
+				else if (k < node.getKey()) {
+					num_search ++;
+					node = node.getLeft();				
+				}
+			}
+			return node.getParent();
+			
+		}
+		
+		private IAVLNode searchPlaceMax (int k, IAVLNode max) {
+			IAVLNode node = max;
+			while (k < node.getKey() && node.getParent() != null) {
+				num_search ++;
+				node = node.getParent();
+			}
+			if (k < node.getKey() && k < node.getRight().getKey()) {
+				if (node.getLeft().getKey() == -1) {
+					num_search ++;
+					return node;
+				}else {
+					node = node.getLeft();
+					num_search ++;
+					return searchDown (k, node);
+				}
+				
+			}
+			else if (k < node.getRight().getKey() && k > node.getKey()) {
+				node = node.getRight();
+				num_search ++;
+				if (node.getLeft().getKey() == -1) {
+					num_search ++;
+					return node;
+				}else {
+					node = node.getLeft();
+					num_search ++;
+					return searchDown (k, node);
+				}
+			}
+			else {
+				return searchDown (k, node);
+			}
+			
+		}
+	
+		
+	public int insert2(int k, String i) {
+		if (this.empty()) {
+			this.root = new AVLNode(k, i);
+			this.max = this.root;
+			return 0;
+		}
+		// System.out.println("S: "+ this.size);
+		IAVLNode maxi = this.max;
+		IAVLNode z = searchPlaceMax(k, maxi);
+		// System.out.println("z is: " +z.getKey());
+		if (z.getKey() == k) return -1;
+		int oldS = this.size;
+		this.size = oldS + 1;
+		IAVLNode x = new AVLNode(k, i);
+		x.setHeight(0);
+		if (k > this.max.getKey()) {
+			this.max = x;
+		}
+		int rebalancing = 0;
+		if (!z.getRight().isRealNode() && !z.getLeft().isRealNode()) { // the parent z is a leaf
+			placeSon(z, x);
+			rebalancing = promote(z, rebalancing);
+			x = z;
+			z = z.getParent();
+
+			while (x.getKey() != this.getRoot().getKey() && x.getHeight() == z.getHeight()) {
+				if (hightDef(z, x) == 1) { // Case 1
+					rebalancing = promote(z, rebalancing);
+					x = z;
+					z = z.getParent();
+				} else { // Case 2 or Case 3, height deference = 2
+					if (z.getKey() < x.getKey()) {
+						if (hightDef(x, x.getRight()) == 2 && hightDef(x, x.getLeft()) == 1) { // case 2
+							rebalancing = singleRotation((AVLNode) z, rebalancing, 'I');
+							break;
+						} else { // case 3
+							rebalancing = doubleRotation((AVLNode) z, rebalancing, 'I');
+							break;
+						}
+					} else {
+						if (hightDef(x, x.getLeft()) == 2 && hightDef(x, x.getRight()) == 1) { // case 2
+							rebalancing = singleRotation((AVLNode) z, rebalancing, 'I');
+							break;
+						} else { // case 3
+							rebalancing = doubleRotation((AVLNode) z, rebalancing, 'I');
+							break;
+						}
+					}
+				}
+			}
+
+		} else { // the parent z is not a leaf - tree stays valid
+			placeSon(z, x);
+		}
+		while (x != null) {
+			updateNodeSize((AVLNode) x);
+			x = x.getParent();
+		}
+		return rebalancing;
+
+	}
 
 	public static void print2(IAVLNode x) {
 		if (x == null) System.out.println("null");
@@ -130,14 +251,17 @@ public class AVLTree {
 
 	private IAVLNode root;
 	private int size;
+	private IAVLNode max;
 	
 	public AVLTree() {
 		this(null);
 		this.size = 0;
+		this.max = new AVLNode();
 	}
 	public AVLTree(IAVLNode root) {
 		this.root = root;
 		this.size = 1;
+		this.max = root;
 	}
 	
 	
@@ -214,6 +338,7 @@ public class AVLTree {
 		
 		return null; 
 	}
+
 
 	/**
 	 * public int insert(int k, String i)
@@ -635,13 +760,13 @@ public class AVLTree {
 					arr[i] = node.getKey();
 					i++;
 					// node = node.getRight();
-					if (node.getRight().getKey() == -1) {
+					if (node.getRight().getKey() == -1 && i < this.size()) {
 						node = stack.pop();
 						arr[i] = node.getKey();
 						i++;
 
 					}
-					while (node.getRight().getKey() == -1) {
+					while (node.getRight().getKey() == -1 && i < this.size()) {
 						node = stack.pop();
 						arr[i] = node.getKey();
 						i++;
