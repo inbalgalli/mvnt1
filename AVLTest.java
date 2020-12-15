@@ -139,7 +139,7 @@ public class AVLTest {
             for (int x : valuesShuffled) {
                 i++;
                 if ((i - 1) % 4 == 0) {
-                    BTreePrinter.printNode(tree.getRoot());
+                    //BTreePrinter.printNode(tree.getRoot());
                 }
                 if (x < 0) {
                     System.out.println("deleting " + -x);
@@ -329,16 +329,18 @@ public class AVLTest {
         AVLTest test = new AVLTest();
         AVLTree tree = new TestTree();
 
-       // test.testEmpty();
-       // test.testSize();
+        test.testEmpty();
+        test.testSize();
         test.testDelete();
         test.testInsert();
-        //test.testSearch();
-       // test.testGetRoot();
-       // test.testMinMax();
-       // test.testInfoToArray();
-       // test.testKeysToArray();
-        AVLTree mTree = simulateProblematicTree();
+        test.testSearch();
+        test.testGetRoot();
+        test.testMinMax();
+        test.testInfoToArray();
+        test.testKeysToArray();
+        test.testInsertAndDelete();
+        test.testJoin();
+        //AVLTree mTree = simulateProblematicTree();
         System.out.println("done test");
         test.testInsertAndDelete();
         test.testJoin();
